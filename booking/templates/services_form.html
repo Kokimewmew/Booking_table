@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form method='post' enctype="multipart/form-data">
+    <div class="row">
+
+        <div class="col-6">
+            <p class="card-text"> Редактирование продукта </p>
+            <div class="card">
+
+                <div class="card-body">
+
+
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">
+                        {% if object %}
+                        Сохранить
+                        {% else %}
+                        Создать
+                        {% endif %}
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
