@@ -8,8 +8,6 @@ from booking.forms import ServicesForm, ServicesModeratorForm
 from booking.models import Services, Table, RestaurantTeam, Reservation
 
 
-
-
 class ServicesListView(ListView):
     model = Services
     template_name = "base.html"
@@ -44,18 +42,10 @@ class ServicesCreateView(CreateView, LoginRequiredMixin):
 class ServicesUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'services_form.html'
     model = Services
+    fields = '__all__'
 
     def get_success_url(self):
         return reverse('booking:services_detail', args=(self.kwargs.get('pk'),))
-
-    def get_form_class(self):
-        user = self.request.user
-        if user.has_perm(
-                "services.can_edit") and user.has_perm(
-                "services.can_delete"):
-            return ServicesModeratorForm
-
-        raise PermissionDenied
 
 
 class ServicesDeleteView(DeleteView):
@@ -126,22 +116,24 @@ class RestaurantTeamDetailview(DetailView):
     template_name = 'team_detail.html'
 
 
-
 class RestaurantTeamCreateView(CreateView, LoginRequiredMixin):
+    fields = '__all__'
+    template_name = 'team_form.html'
     model = RestaurantTeam
-    success_url = reverse_lazy('booking:main')
+    success_url = reverse_lazy('booking:team_list')
 
 
 class RestaurantTeamUpdateView(LoginRequiredMixin, UpdateView):
-    model = RestaurantTeam
+    fields = '__all__'
     template_name = 'team_form.html'
-
+    model = RestaurantTeam
+    success_url = reverse_lazy('booking:team_detail')
 
     def get_success_url(self):
-        return reverse('booking:services_detail', args=(self.kwargs.get('pk'),))
+        return reverse('booking:team_detail', args=(self.kwargs.get('pk'),))
 
 
 class RestaurantTeamDeleteView(DeleteView):
-    template_name = 'booking/services_delete.html'
+    template_name = 'team_delete.html'
     model = RestaurantTeam
-    success_url = reverse_lazy('booking:main')
+    success_url = reverse_lazy('booking:team_list')

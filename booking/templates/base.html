@@ -140,15 +140,16 @@
 
                     <li class="nav-item"><a class="nav-link" href="">Product</a></li>
                     <li class="nav-item"><a class="nav-link" href="">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="">О ресторане</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contacts/">Контакты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'booking:team_list' %}">Наша команда</a></li>
-                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'booking:team_list' %}">О ресторане</a></li>
+
+                    {% if user.is_authenticated and user.is_superuser %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'booking:services_create' %}">Создать новую
                         услугу</a></li>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}">Выход</a></li>
-
-
                     {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Вход</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'users:register' %}">Зарегистрироваться</a>
@@ -166,8 +167,6 @@
 {% block content %}
 
 
-
-
 <div class="album py-5 bg-body-tertiary">
 
     <div class="container">
@@ -178,7 +177,8 @@
 
             <div class="col">
                 <div class="card shadow-sm">
-                    <img class="bd-placeholder-img  card-img-top "  width="100%" height="225"  src="{{ service.preview|media_filter  }}">
+                    <img class="bd-placeholder-img  card-img-top " width="100%" height="225"
+                         src="{{ service.preview|media_filter  }}">
                     <div class="card-body">
                         <h2 class="display-5">{{service.name }}</h2>
                         <p class="lead">{{service.description}}</p>

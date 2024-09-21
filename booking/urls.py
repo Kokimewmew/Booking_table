@@ -24,5 +24,11 @@ urlpatterns = [
    path('team/<int:pk>/update/', RestaurantTeamUpdateView.as_view(), name='team_update'),
    path('team/<int:pk>/delete/', RestaurantTeamDeleteView.as_view(), name='team_delete'),
 
+   path('table/', TableListView.as_view(), name='table_list'),
+   path('table/<int:pk>/', TableDetailview.as_view(), name='table_detail'),
+   path('table/create/', TableCreateView.as_view(), name='table_create'),
+   path('table/<int:pk>/update/', TableUpdateView.as_view(), name='table_update'),
+   path('table/<int:pk>/delete/', TableDeleteView.as_view(), name='table_delete'),
+
 ]
 

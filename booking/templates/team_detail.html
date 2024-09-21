@@ -17,11 +17,10 @@
                         <div class="d-flex justify-content-between align-items-center">
 
 
-
                             <div class="btn-group-5">
                                 <a class="btn btn-primary" href="{% url 'booking:team_list' %}"
                                    role="button">Назад</a>
-                                {% if perms.services.can_edit and perms.services.can_delete%}
+                                {% if user.is_authenticated and user.is_superuser %}
                                 <a class="btn btn-primary" href="{% url 'booking:team_update' object.pk %}"
                                    role="button">Редактировать</a>
                                 <a class="btn btn-primary" href="{% url 'booking:team_delete' object.pk %}"
