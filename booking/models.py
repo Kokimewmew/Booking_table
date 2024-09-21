@@ -18,7 +18,6 @@ class Services(models.Model):
         verbose_name_plural = 'Услуги'
 
 
-
 class Table(models.Model):
     number = models.IntegerField(verbose_name="Номер стола")
     seats = models.IntegerField(verbose_name="Количество мест")

@@ -3,15 +3,15 @@
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-        <img class=" card-img-top "    src="{{ services.preview|media_filter  }}">
+        <img class=" card-img-top "    src="{{ object.photo|media_filter  }}">
         <div class="row">
             <div class="col">
                 <div class="card shadow-sm">
 
                     <div class="card-body">
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <p class="card-text">{{object.name}}</p>
-                        <p class="card-text">{{object.description}}</p>
+                        <p class="card-text">{{object.employee_name}}</p>
+                        <p class="card-text">{{object.position}}</p>
                             </ul>
 
                         <div class="d-flex justify-content-between align-items-center">
@@ -19,12 +19,12 @@
 
 
                             <div class="btn-group-5">
-                                <a class="btn btn-primary" href="{% url 'booking:main' %}"
+                                <a class="btn btn-primary" href="{% url 'booking:team_list' %}"
                                    role="button">Назад</a>
                                 {% if perms.services.can_edit and perms.services.can_delete%}
-                                <a class="btn btn-primary" href="{% url 'booking:services_update' services.pk %}"
+                                <a class="btn btn-primary" href="{% url 'booking:team_update' object.pk %}"
                                    role="button">Редактировать</a>
-                                <a class="btn btn-primary" href="{% url 'booking:services_delete' services.pk %}"
+                                <a class="btn btn-primary" href="{% url 'booking:team_delete' object.pk %}"
                                    role="button">Удалить</a>
                                 {% endif %}
                             </div>
