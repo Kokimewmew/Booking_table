@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from users.models import User
@@ -49,6 +50,9 @@ class Reservation(models.Model):
     class Meta:
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Бронирование'
+
+
+
 
 
 class RestaurantTeam(models.Model):

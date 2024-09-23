@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, TemplateView, DeleteView, UpdateView, CreateView, DetailView
 
-from booking.forms import ServicesForm, ServicesModeratorForm
+from booking.forms import ServicesForm, ServicesModeratorForm, ReservationForm
 from booking.models import Services, Table, RestaurantTeam, Reservation
 
 
@@ -56,54 +56,93 @@ class ServicesDeleteView(DeleteView):
 
 class TableListView(ListView):
     model = Table
+    template_name = 'table_list.html'
 
 
 class TableDetailview(DetailView):
     model = Table
+    template_name = 'table_detail.html'
 
 
 class TableCreateView(CreateView, LoginRequiredMixin):
     model = Table
-    success_url = reverse_lazy('booking:main')
+    fields = '__all__'
+    template_name = 'table_form.html'
+    success_url = reverse_lazy('booking:table_list')
 
 
 class TableUpdateView(LoginRequiredMixin, UpdateView):
     model = Table
+    template_name = 'table_form.html'
+
+    fields = '__all__'
 
     def get_success_url(self):
-        return reverse('booking:services_detail', args=(self.kwargs.get('pk'),))
+        return reverse('booking:table_detail', args=(self.kwargs.get('pk'),))
 
 
 class TableDeleteView(DeleteView):
-    template_name = 'booking/services_delete.html'
     model = Table
-    success_url = reverse_lazy('booking:main')
+    template_name = 'table_delete.html'
+    success_url = reverse_lazy('booking:table_list')
 
 
 class ReservationListView(ListView):
     model = Reservation
+    template_name = 'reservation_list.html'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user, status__in=[1, 3])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any additional context you need (like available tables)
+        # Example:
+        context['available_tables'] = Table.objects.filter(availability=True)
+        return context
+
+
+
 
 
 class ReservationDetailview(DetailView):
     model = Reservation
+    template_name = 'reservation_detail.html'
 
 
 class ReservationCreateView(CreateView, LoginRequiredMixin):
     model = Reservation
-    success_url = reverse_lazy('booking:main')
+    form_class = ReservationForm
+
+    template_name = 'reservation_form.html'
+    success_url = reverse_lazy('booking:reservation_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        table = self.kwargs.get('pk')
+        form.instance.table = Table.objects.get(pk=table)
+        form.instance.status = 3  # Устанавливаем статус "Ожидание" по умолчанию
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'table': self.kwargs.get('pk')})
+        return kwargs
 
 
 class ReservationUpdateView(LoginRequiredMixin, UpdateView):
     model = Reservation
+    fields = ('start_datetime', 'end_datetime',)
+    template_name = 'reservation_form.html'
 
     def get_success_url(self):
-        return reverse('booking:services_detail', args=(self.kwargs.get('pk'),))
+        return reverse('booking:reservation_detail', args=(self.kwargs.get('pk'),))
 
 
 class ReservationDeleteView(DeleteView):
-    template_name = 'booking/services_delete.html'
+    template_name = 'reservation_delete.html'
     model = Reservation
-    success_url = reverse_lazy('booking:main')
+    success_url = reverse_lazy('booking:reservation_list')
 
 
 class RestaurantTeamListView(ListView):
@@ -127,7 +166,6 @@ class RestaurantTeamUpdateView(LoginRequiredMixin, UpdateView):
     fields = '__all__'
     template_name = 'team_form.html'
     model = RestaurantTeam
-    success_url = reverse_lazy('booking:team_detail')
 
     def get_success_url(self):
         return reverse('booking:team_detail', args=(self.kwargs.get('pk'),))

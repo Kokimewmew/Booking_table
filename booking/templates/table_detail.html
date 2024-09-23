@@ -3,26 +3,37 @@
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-        <img class=" card-img-top "    src="{{ object.photo|media_filter  }}">
         <div class="row">
             <div class="col">
                 <div class="card shadow-sm">
-
                     <div class="card-body">
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <p class="card-text">{{object.employee_name}}</p>
-                        <p class="card-text">{{object.position}}</p>
-                            </ul>
+                            <p class="card-text">{{object.number}}</p>
+                            <p class="card-text"> Количество мест:{{object.seats}}</p>
+                        </ul>
+
                         <div class="d-flex justify-content-between align-items-center">
+
+
                             <div class="btn-group-5">
-                                <a class="btn btn-primary" href="{% url 'booking:team_list' %}"
+                                <a class="btn btn-primary" href="{% url 'booking:table_list' %}"
                                    role="button">Назад</a>
                                 {% if user.is_authenticated and user.is_superuser %}
-                                <a class="btn btn-primary" href="{% url 'booking:team_update' object.pk %}"
+
+                                <a class="btn btn-primary" href="{% url 'booking:table_update' object.pk %}"
                                    role="button">Редактировать</a>
-                                <a class="btn btn-danger" href="{% url 'booking:team_delete' object.pk %}"
+
+                                <a class="btn btn-danger" href="{% url 'booking:table_delete' object.pk %}"
                                    role="button">Удалить</a>
                                 {% endif %}
+
+
+                                {% if user.is_authenticated %}
+                                <a class="btn btn-primary" href="{% url 'booking:reservation_create' table.pk   %}"
+                                   role="button">выбор времени</a>
+                                {% endif %}
+
+
                             </div>
                         </div>
                     </div>

@@ -3,7 +3,9 @@ from django.urls import path
 from booking.apps import BookingConfig
 from booking.views import ServicesListView, ContactsView, ServicesDetailview, ServicesCreateView, ServicesUpdateView, \
    ServicesDeleteView, RestaurantTeamListView, RestaurantTeamDetailview, RestaurantTeamCreateView, \
-   RestaurantTeamUpdateView, RestaurantTeamDeleteView
+   RestaurantTeamUpdateView, RestaurantTeamDeleteView, TableListView, TableDetailview, TableCreateView, TableUpdateView, \
+   TableDeleteView, ReservationListView, ReservationDetailview, ReservationCreateView, ReservationUpdateView, \
+   ReservationDeleteView
 
 app_name = BookingConfig.name
 
@@ -29,6 +31,12 @@ urlpatterns = [
    path('table/create/', TableCreateView.as_view(), name='table_create'),
    path('table/<int:pk>/update/', TableUpdateView.as_view(), name='table_update'),
    path('table/<int:pk>/delete/', TableDeleteView.as_view(), name='table_delete'),
+
+   path('reservation/', ReservationListView.as_view(), name='reservation_list'),
+   path('reservation/<int:pk>/', ReservationDetailview.as_view(), name='reservation_detail'),
+   path('table/<int:pk>/reservation/create/', ReservationCreateView.as_view(), name='reservation_create'),
+   path('reservation/<int:pk>/update/', ReservationUpdateView.as_view(), name='reservation_update'),
+   path('reservation/<int:pk>/delete/', ReservationDeleteView.as_view(), name='reservation_delete'),
 
 ]
 

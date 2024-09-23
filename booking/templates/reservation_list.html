@@ -7,28 +7,24 @@
 
 
     <div class="container">
-        {% if user.is_authenticated and user.is_superuser %}
         <a class="btn btn-success" href="{% url 'booking:team_create'  %}"
            role="button">Добавить сотрудника</a>
-        {% endif %}
 
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
 
-            {% for team in object_list %}
-
+            {% if reservation_list %}
+            {% for reservation in object_list %}
             <div class="col">
                 <div class="card shadow-sm">
-                    <img class="bd-placeholder-img  card-img-top " width="100%" height="225"
-                         src="{{ team.photo|media_filter  }}">
                     <div class="card-body">
-                        <h2 class="display-5">{{team.employee_name }}</h2>
-                        <p class="lead">{{team.position}}</p>
+                        <h2 class="display-5">{{reservation.table }}</h2>
+                        <p class="lead">{{reservation.start_datetime}}</p>
 
                         <div class="d-flex justify-content-between  align-items-center">
                             <div class="btn-group ">
-                                <a class="btn btn-primary" href="{% url 'booking:team_detail' team.pk %}"
+                                <a class="btn btn-primary" href="{% url 'booking:reservation_detail' reservation.pk %}"
                                    role="button">Посмотреть</a>
                             </div>
                         </div>
@@ -36,6 +32,11 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <p>No reservations found.</p>
+            {% endif %}
+
+
         </div>
     </div>
 </div>
