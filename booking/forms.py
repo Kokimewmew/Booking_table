@@ -1,4 +1,4 @@
-from datetime import timedelta, time
+from datetime import timedelta, time, datetime
 
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
@@ -23,51 +23,48 @@ class ServicesModeratorForm(StyleFormMixin, ModelForm):
 class ReservationForm(StyleFormMixin, ModelForm):
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)  # Получаем пользователя из контекста (если он есть)
         self.table = kwargs.pop('table')
         super().__init__(*args, **kwargs)
 
     def clean(self):
         cleaned_data = self.cleaned_data
 
-        start_time = cleaned_data.get('start_datetime').time()
-        end_time = cleaned_data.get('end_datetime').time() if cleaned_data.get('end_datetime') else None
+        table = self.table
+        start_date = cleaned_data.get('start_date')
+        start_time = datetime.strptime(cleaned_data.get('start_time'), '%H:%M').time()
 
-        # Проверка, что бронирование происходит между 12:00 и 22:00
-        if start_time < time(12, 0) or end_time > time(22, 0):
-            raise ValidationError("Вы можете забронировать стол только с 12:00 до 22:00")
+        # Рассчитываем время начала и конца бронирования с учетом 4-х часов до и после
 
-        if cleaned_data.get('start_datetime') is None:
-            raise ValidationError("Необходимо указать дату и время начало бронирования")
+        do_time = (datetime.combine(datetime.min, start_time) - timedelta(hours=4)).time()
+        end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=4)).time()
 
-        if cleaned_data.get('start_datetime') < timezone.now():
-            raise ValidationError("Дата и время начала бронирования должны быть в будущем.")
+        print(do_time, end_time)
 
-
-
-        if cleaned_data.get('end_datetime') is None:
-
-            existing_reservations = Reservation.objects.filter(
-                table=self.table,
-                start_datetime__lt=cleaned_data.get('start_datetime') + timedelta(hours=3),
-                end_datetime__gt=cleaned_data.get('start_datetime'),
-                status__in=[1, 3]
-
-            )
-
-        else:
-            existing_reservations = Reservation.objects.filter(
-                table=self.table,
-                start_datetime__lt=cleaned_data.get('end_datetime'),
-                end_datetime__gt=cleaned_data.get('start_datetime'),
-                status__in=[1, 3]
-
-            )
-
+        # Проверка на конфликт с существующими бронированиями
+        existing_reservations = Reservation.objects.filter(
+            table=table,
+            start_date=start_date,
+            start_time__gte=start_time,
+            start_time__lt=end_time,
+            start_time__range=(do_time, end_time),
+            status__in=[1, 3],
+        ).exclude(pk=self.instance.pk)  
         if existing_reservations.exists():
-            raise ValidationError("Стол занят в это время")
+            raise ValidationError("Стол занят в это время.")
+
+        # Проверка на существование активного бронирования у пользователя
+        if self.user:  # Проверяем,  есть  ли  пользователь  в  контексте
+            active_reservations = Reservation.objects.filter(
+                user=self.user,
+                status__in=[1, 3],  # "Подтвержден" and "Ожидание"
+                end_datetime__isnull=True,
+            ).exclude(pk=self.instance.pk)
+            if active_reservations.exists():
+                raise ValidationError("У вас уже есть активное бронирование.")
 
         return cleaned_data
 
     class Meta:
         model = Reservation
-        fields = ('start_datetime', 'end_datetime',)
+        fields = ('start_date', 'start_time',)

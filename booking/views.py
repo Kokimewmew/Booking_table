@@ -1,10 +1,13 @@
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
+
+from django.db import IntegrityError
+
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, TemplateView, DeleteView, UpdateView, CreateView, DetailView
 
-from booking.forms import ServicesForm, ServicesModeratorForm, ReservationForm
+from booking.forms import ServicesForm, ReservationForm
 from booking.models import Services, Table, RestaurantTeam, Reservation
 
 
@@ -102,9 +105,6 @@ class ReservationListView(ListView):
         return context
 
 
-
-
-
 class ReservationDetailview(DetailView):
     model = Reservation
     template_name = 'reservation_detail.html'
@@ -118,25 +118,44 @@ class ReservationCreateView(CreateView, LoginRequiredMixin):
     success_url = reverse_lazy('booking:reservation_list')
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        table = self.kwargs.get('pk')
-        form.instance.table = Table.objects.get(pk=table)
-        form.instance.status = 3  # Устанавливаем статус "Ожидание" по умолчанию
-        return super().form_valid(form)
+
+        try:
+            form.instance.user = self.request.user
+            table = self.kwargs.get('pk')
+            form.instance.table = Table.objects.get(pk=table)
+            form.instance.status = 3  # Устанавливаем статус "Ожидание" по умолчанию
+            return super().form_valid(form)
+        except IntegrityError as e:
+            # Обработка ошибки IntegrityError
+            form.add_error(None, 'Этот стол уже забронирован клиентом на это время.')
+            return render(self.request, 'reservation_form.html', {'form': form})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'table': self.kwargs.get('pk')})
+        kwargs.update({'user': self.request.user, 'table': self.kwargs.get('pk')})
         return kwargs
 
 
 class ReservationUpdateView(LoginRequiredMixin, UpdateView):
     model = Reservation
-    fields = ('start_datetime', 'end_datetime',)
-    template_name = 'reservation_form.html'
+    form_class = ReservationForm
+    template_name = 'reservation_update.html'
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except IntegrityError as e:
+            # Обработка ошибки IntegrityError
+            form.add_error(None, 'Этот стол уже забронирован клиентом на это время.')
+            return render(self.request, 'reservation_update.html', {'form': form})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user, 'table': self.kwargs.get('pk')})
+        return kwargs
 
     def get_success_url(self):
-        return reverse('booking:reservation_detail', args=(self.kwargs.get('pk'),))
+        return reverse('booking:reservation_list')
 
 
 class ReservationDeleteView(DeleteView):

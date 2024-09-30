@@ -1,6 +1,10 @@
+from datetime import datetime, timedelta
+
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from booking.validators import validate_start_date
 from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
@@ -38,18 +42,39 @@ class Reservation(models.Model):
         (2, 'Отменен'),
         (3, 'Ожидание')
     ]
+
+    choice_time = [
+        ('12:00', '12:00'),
+        ('13:00', '13:00'),
+        ('14:00', '14:00'),
+        ('15:00', '15:00'),
+        ('16:00', '16:00'),
+        ('17:00', '17:00'),
+        ('18:00', '18:00'),
+        ('19:00', '19:00'),
+        ('20:00', '20:00'),
+        ('21:00', '21:00'),
+        ('22:00', '22:00'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Гость забронировавший стол")
     table = models.ForeignKey(Table, on_delete=models.CASCADE, verbose_name="Стол")
-    start_datetime = models.DateTimeField(verbose_name="Дата и время бронирования")
-    end_datetime = models.DateTimeField(verbose_name="Дата и время окончания бронирования", **NULLABLE)
+    start_date = models.DateField(verbose_name="Дата бронирования", default=datetime.now, validators=[validate_start_date]
+                                      )
+    start_time = models.CharField(verbose_name="Время бронирования",
+                                  default='12:00',
+                                  choices=choice_time)
+    end_datetime = models.DateTimeField(blank=True, null=True, verbose_name="Время окончания бронирования")
+
     status = models.PositiveIntegerField(default=3, choices=status, verbose_name="Статус бронирования")
 
     def __str__(self):
-        return f'{self.user} забронировал  {self.table} на  {self.start_datetime}'
+        return f'{self.user} забронировал  {self.table} на  {self.start_date}'
 
     class Meta:
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Бронирование'
+        unique_together = ('table', 'start_date', 'start_time')
 
 
 

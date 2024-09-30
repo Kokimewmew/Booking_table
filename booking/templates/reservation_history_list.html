@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>История  бронирований</h1>
+<ul>
+    {% for reservation in object_list %}
+        <li>
+            {{ reservation.table }} - {{ reservation.start_datetime }} - {{ reservation.get_status_display }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

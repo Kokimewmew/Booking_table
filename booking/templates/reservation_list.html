@@ -7,8 +7,9 @@
 
 
     <div class="container">
-        <a class="btn btn-success" href="{% url 'booking:team_create'  %}"
-           role="button">Добавить сотрудника</a>
+        <a class="btn btn-success" href="{% url 'booking:table_list'  %}"
+           role="button">Выбрать и забронировать стол</a>
+
 
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -20,12 +21,16 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h2 class="display-5">{{reservation.table }}</h2>
-                        <p class="lead">{{reservation.start_datetime}}</p>
+                        <p class="lead">{{reservation.start_date}}</p>
+                        <p class="lead">{{reservation.start_time}}</p>
 
                         <div class="d-flex justify-content-between  align-items-center">
                             <div class="btn-group ">
-                                <a class="btn btn-primary" href="{% url 'booking:reservation_detail' reservation.pk %}"
-                                   role="button">Посмотреть</a>
+                                <a class="btn btn-primary" href="{% url 'booking:reservation_update' reservation.pk %}"
+                                   role="button">Изменить</a>
+                                <a class="btn btn-primary" href="{% url 'booking:reservation_delete' reservation.pk %}"
+                                   role="button">Удалить</a>
+
                             </div>
                         </div>
                     </div>
@@ -33,7 +38,7 @@
             </div>
             {% endfor %}
             {% else %}
-            <p>No reservations found.</p>
+            <p>У вас нет бронированных столов</p>
             {% endif %}
 
 

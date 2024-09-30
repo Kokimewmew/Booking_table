@@ -2,10 +2,11 @@ import secrets
 import string
 
 from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm
@@ -68,3 +69,23 @@ def reset_password(request):
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'users/user_profile.html'
+
+    def get_object(self):
+        return self.request.user
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ('first_name', 'last_name', 'phone', 'city', 'avatar')
+    template_name = 'users/user_update.html'
+
+    def get_object(self):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse('users:profile')

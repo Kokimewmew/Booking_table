@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block content %}
+
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <a class="btn btn-success" href="{% url 'booking:team_create' %}"
+           role="button">Добавить сотрудника</a>
+
+        <div>
+            <h2>Choose Date and Time</h2>
+            <form method="POST" action="{% url 'booking:reservation_filter' %}">
+                {% csrf_token %}
+                <label for="reservation-date">Date:</label>
+                <select id="reservation-date" name="reservation-date">
+                    {% for date in reservation_dates %}
+                        <option value="{{ date|date:'Y-m-d' }}">{{ date|date:'d.m.Y' }}</option>
+                    {% endfor %}
+                </select>
+                <label for="reservation-time">Time:</label>
+                <select id="reservation-time" name="reservation-time">
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                </select>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% if table_list %}
+                {% for table in table_list %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                                    <p class="card-text">{{ table.number }}</p>
+                                    <p class="card-text"> Количество мест: {{ table.seats }}</p>
+                                </ul>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group-5">
+                                        {% if user.is_authenticated and user.is_superuser %}
+                                            <a class="btn btn-primary" href="{% url 'booking:table_update' table.pk %}"
+                                               role="button">Редактировать</a>
+
+                                            <a class="btn btn-danger" href="{% url 'booking:table_delete' table.pk %}"
+                                               role="button">Удалить</a>
+                                        {% endif %}
+
+                                        {% if user.is_authenticated %}
+                                            <a class="btn btn-primary" href="{% url 'booking:reservation_create' table.pk %}"
+                                               role="button">Выбор времени</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No tables found for this date and time.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
