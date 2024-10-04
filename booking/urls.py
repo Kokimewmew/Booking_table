@@ -6,7 +6,7 @@ from booking.views import ServicesListView, ContactsView, ServicesDetailview, Se
     RestaurantTeamUpdateView, RestaurantTeamDeleteView, TableListView, TableDetailview, TableCreateView, \
     TableUpdateView, \
     TableDeleteView, ReservationListView, ReservationDetailview, ReservationCreateView, ReservationUpdateView, \
-    ReservationDeleteView
+    ReservationDeleteView, AdminMessagesView
 
 app_name = BookingConfig.name
 
@@ -37,5 +37,6 @@ urlpatterns = [
     path('reservation/<int:pk>/update/', ReservationUpdateView.as_view(), name='reservation_update'),
     path('reservation/<int:pk>/delete/', ReservationDeleteView.as_view(), name='reservation_delete'),
 
+    path('messages/', AdminMessagesView.as_view(), name='admin_messages'),
 
 ]

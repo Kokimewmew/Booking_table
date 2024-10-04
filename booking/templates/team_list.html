@@ -2,31 +2,48 @@
 {% load my_tags %}
 {% block content %}
 
-
 <div class="album py-5 bg-body-tertiary">
-
-
     <div class="container">
-        {% if user.is_authenticated and user.is_superuser %}
-        <a class="btn btn-success" href="{% url 'booking:team_create'  %}"
-           role="button">Добавить сотрудника</a>
-        {% endif %}
+        <div class="col-md-4 ">
+            <img src="/media/icon/icon_logo.png" class="img-fluid rounded" alt="Картинка справа">
+        </div>
+
+
+        <h2 class="display-4 text-center mb-4">Наша команда и о нас</h2>
+        <p class="text-center mb-5">
+            Добро пожаловать в ресторан "Барселли" - это место, где каждый гость находит свое уединение и
+            наслаждается изысканной кухней в уютной атмосфере. Наша цель - создать для вас впечатление, которое вы
+            будете хранить в памяти надолго.
+
+            История ресторана "Барселли" началась с мечты о создании места, где гости могли бы отдохнуть от
+            городской суеты и насладиться настоящим вкусом домашней кухни. Мы стремимся к тому, чтобы каждый посетитель
+            нашего заведения чувствовал себя как дома, в окружении заботы и внимания.
+
+            Наша команда талантливых поваров приготовит для вас блюда из отборных продуктов, приправленные любовью и
+            теплом. Мы уделяем особое внимание качеству сервиса и комфорту наших гостей, поэтому столики в "Барселли"
+            всегда накрыты с любовью и уютом.
+
+            Мы приглашаем вас насладиться уникальным вкусом и атмосферой нашего ресторана. Посетите "Барселли" и
+            откройте для себя новые гастрономические впечатления, которые оставят в вашей душе теплые воспоминания.
+            Добро пожаловать в наш уютный уголок!
+        </p>
 
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
+            {% if user.is_authenticated and user.is_superuser %}
+            <a class="btn btn-success" href="{% url 'booking:team_create'  %}"
+               role="button">Добавить сотрудника</a>
+            {% endif %}
 
             {% for team in object_list %}
-
             <div class="col">
                 <div class="card shadow-sm">
-                    <img class="bd-placeholder-img  card-img-top " width="100%" height="225"
-                         src="{{ team.photo|media_filter  }}">
+                    <img class="bd-placeholder-img card-img-top" width="100%" height="225"
+                         src="{{ team.photo|media_filter }}">
                     <div class="card-body">
-                        <h2 class="display-5">{{team.employee_name }}</h2>
-                        <p class="lead">{{team.position}}</p>
-
-                        <div class="d-flex justify-content-between  align-items-center">
+                        <h2 class="display-5 text-center">{{ team.employee_name }}</h2>
+                        <p class="lead text-center">{{ team.position }}</p>
+                        <div class="d-flex justify-content-center  align-items-center">
                             <div class="btn-group ">
                                 <a class="btn btn-primary" href="{% url 'booking:team_detail' team.pk %}"
                                    role="button">Посмотреть</a>
@@ -36,8 +53,13 @@
                 </div>
             </div>
             {% endfor %}
+
         </div>
+
+
     </div>
+
+
 </div>
 
 

@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<div class="album py-5 bg-body-tertiary">
+<div class="container py-5 bg-body-tertiary">
 
 
     <div class="container">
@@ -11,10 +11,10 @@
         <a class="btn btn-success" href="{% url 'booking:table_create'  %}"
            role="button">Добавить стол</a>
         {% endif %}
-        {% if  user.is_authenticated %}
+        {% if user.is_authenticated %}
 
         {% else %}
-                    <p class="lead text-danger"> Авторизуйтесь в системе чтобы бронировать столики</p>
+        <p class="lead text-danger"> Авторизуйтесь в системе чтобы бронировать столики</p>
         {% endif %}
 
 
@@ -23,18 +23,21 @@
 
             {% for table in object_list %}
             <div class="col">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm"
+                     style="background-image: url({{ table.image|media_filter  }}); background-size: cover;">
                     <div class="card-body">
-                        <h2 class="display-5">{{table.number }}</h2>
-                        <p class="lead"> Количество мест: {{table.seats}}</p>
+
+                        <h2 class="badge rounded-pill text-bg-dark text-light fs-4">{{table.number }}</h2>
+                        <p class="badge rounded-pill text-bg-dark text-light fs-6"> Количество мест: {{table.seats}}</p>
                         {% if table.availability %}
-                        <p class="lead text-success">Стол свободен</p>
+                        <p class="text-success">Стол  свободен</p>
                         {% else %}
-                        <p class="lead text-danger">Стол занят</p>
+                        <p class="text-danger">Стол  занят</p>
                         {% endif %}
                         {% if user.is_authenticated %}
                         <div class="d-flex justify-content-between  align-items-center">
                             <div class="btn-group ">
+
                                 <a class="btn btn-success" href="{% url 'booking:table_detail' table.pk %}"
                                    role="button">Забронировать</a>
                             </div>
@@ -47,6 +50,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock  %}

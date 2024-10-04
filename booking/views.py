@@ -1,14 +1,17 @@
+from datetime import datetime, timedelta
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.db import IntegrityError
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.views.generic import ListView, TemplateView, DeleteView, UpdateView, CreateView, DetailView
 
 from booking.forms import ServicesForm, ReservationForm
-from booking.models import Services, Table, RestaurantTeam, Reservation
+from booking.models import Services, Table, RestaurantTeam, Reservation, Message
 
 
 class ServicesListView(ListView):
@@ -25,8 +28,32 @@ class ContactsView(TemplateView):
             phone = request.POST.get('phone')
             message = request.POST.get('message')
 
-            print(f'You have new message from {name} ({phone}): {message}')
-        return render(request, template_name='contacts.html')
+            new_message = Message.objects.create(
+                name=name,
+                phone=phone,
+                message=message,
+            )
+
+            print(f'You have new message from {new_message.name} {new_message.phone}  {new_message.message}  ')
+
+            return redirect('booking:contacts')
+
+
+class AdminMessagesView(ListView):
+    model = Message
+    template_name = 'admin_messages.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = Message.objects.all()
+        return context
+
+    def post(self, request):
+        if request.method == 'POST':
+            if 'clear_messages' in request.POST:
+                Message.objects.all().delete()
+                messages.success(request, 'Все  сообщения  очищены!')
+            return redirect('booking:admin_messages')
 
 
 class ServicesDetailview(DetailView):
@@ -95,13 +122,13 @@ class ReservationListView(ListView):
     template_name = 'reservation_list.html'
 
     def get_queryset(self):
-        return Reservation.objects.filter(user=self.request.user, status__in=[1, 3])
+        return Reservation.objects.filter(user=self.request.user, status__in=[1, 3], end_datetime__gte=timezone.now())
+    #
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add any additional context you need (like available tables)
-        # Example:
-        context['available_tables'] = Table.objects.filter(availability=True)
+        context['history_reservation'] = Reservation.objects.filter(end_datetime__lte=timezone.now(),
+                                                                    user=self.request.user)
         return context
 
 
@@ -124,6 +151,15 @@ class ReservationCreateView(CreateView, LoginRequiredMixin):
             table = self.kwargs.get('pk')
             form.instance.table = Table.objects.get(pk=table)
             form.instance.status = 3  # Устанавливаем статус "Ожидание" по умолчанию
+
+            # Получаем данные из формы
+            start_date = form.cleaned_data.get('start_date')
+            start_time_str = form.cleaned_data.get('start_time')
+            start_time = datetime.strptime(start_time_str, '%H:%M').time()
+            end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
+            end_datetime = datetime.combine(start_date, end_time)
+            form.instance.end_datetime = end_datetime
+
             return super().form_valid(form)
         except IntegrityError as e:
             # Обработка ошибки IntegrityError
@@ -139,10 +175,16 @@ class ReservationCreateView(CreateView, LoginRequiredMixin):
 class ReservationUpdateView(LoginRequiredMixin, UpdateView):
     model = Reservation
     form_class = ReservationForm
-    template_name = 'reservation_update.html'
+    template_name = 'reservation_form.html'
 
     def form_valid(self, form):
         try:
+            start_date = form.cleaned_data.get('start_date')
+            start_time_str = form.cleaned_data.get('start_time')
+            start_time = datetime.strptime(start_time_str, '%H:%M').time()
+            end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
+            end_datetime = datetime.combine(start_date, end_time)
+            form.instance.end_datetime = end_datetime
             return super().form_valid(form)
         except IntegrityError as e:
             # Обработка ошибки IntegrityError
@@ -151,7 +193,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'user': self.request.user, 'table': self.kwargs.get('pk')})
+        kwargs.update({'user': self.request.user, 'table': self.get_object().table})
         return kwargs
 
     def get_success_url(self):

@@ -15,7 +15,7 @@ class TableAdmin(admin.ModelAdmin):
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'table', 'start_date', 'start_time', 'status',)
+    list_display = ('user', 'table', 'start_date', 'start_time', 'end_datetime', 'status',)
 
 
 @admin.register(RestaurantTeam)

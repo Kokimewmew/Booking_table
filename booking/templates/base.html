@@ -5,6 +5,7 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 <head>
+    
     <script type="text/javascript"
             src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ihlB7e5uryzxgzLoxgBzoM9PYcAg2sL8qAH_kNRcafJOU7ycHLNQWuT-wuLB9L0UNw7LRwAiolq1kkYbeV48atfaAfGmTyjtIyoGdda9Stg"
             charset="UTF-8"></script>
@@ -103,8 +104,6 @@
           display: block !important;
         }
     </style>
-
-
     <!-- Custom styles for this template -->
     <link href=" {% static 'css/product.css' %}" rel="stylesheet">
 </head>
@@ -113,17 +112,14 @@
 {% include 'includes/inc_menu.html' %}
 
 
-{% block content %}
-
-
 
 
 <div class="col">
     <div class="card shadow-sm">
-        <div class="card-body">
+        <div class="card-body" style="background-image: url('/media/icon/img.png'); background-size: cover; background-repeat: no-repeat;">
             <div class="d-flex justify-content-between  align-items-center" >
                 <div class="btn-group ">
-                    <a class="btn btn-primary" style="margin-right: 10px;"  href="{% url 'booking:table_list' %}"
+                    <a class="btn btn-primary" style="margin-right: 10px;" href="{% url 'booking:table_list' %}"
                        role="button">Посмотреть свободные столики</a>
                     {% if user.is_authenticated %}
                     <a class="btn btn-primary" href="{% url 'booking:reservation_list' %}"
@@ -137,92 +133,81 @@
 </div>
 
 
-<div class="album py-5 bg-body-tertiary">
 
+{% block content %}
 
-    <div class="container">
-
-
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
-
-            {% for service in object_list %}
-
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img class="bd-placeholder-img  card-img-top " width="100%" height="225"
-                         src="{{ service.preview|media_filter  }}">
-                    <div class="card-body">
-                        <h2 class="display-5">{{service.name }}</h2>
-                        <p class="lead">{{service.description}}</p>
-
-                        <div class="d-flex justify-content-between  align-items-center">
-                            <div class="btn-group ">
-                                <a class="btn btn-primary" href="{% url 'booking:services_detail' service.pk %}"
-                                   role="button">Посмотреть</a>
+<div class="album py-5 bg-body-tertiary"
+     style="background-image: url('/media/icon/img.png'); background-size: cover; background-repeat: no-repeat;">
+    <div class="container">>
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for service in object_list %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img class="bd-placeholder-img  card-img-top " width="100%" height="225"
+                             src="{{ service.preview|media_filter  }}">
+                        <div class="card-body">
+                            <h2 class="display-5">{{service.name }}</h2>
+                            <div class="d-flex justify-content-between  align-items-center">
+                                <div class="btn-group ">
+                                    <a class="btn btn-primary" href="{% url 'booking:services_detail' service.pk %}"
+                                       role="button">Посмотреть</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-{% endblock %}
 
-<footer class="container py-5">
-    <div class="row">
-        <div class="col-12 col-md">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mb-2" role="img"
-                 viewBox="0 0 24 24"><title>Product</title>
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/>
-            </svg>
-            <small class="d-block mb-3 text-body-secondary">&copy; 2024</small>
         </div>
-        <div class="col-6 col-md">
-            <h5>Features</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md">
-            <h5>Resources</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md">
-            <h5>Resources</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="link-secondary text-decoration-none" href="#">Business</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Education</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Government</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Gaming</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md">
-            <h5>About</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="link-secondary text-decoration-none" href="#">Team</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
-                <li><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
-            </ul>
-        </div>
+
     </div>
-</footer>
-<script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+
+    <footer class="container py-5" >
+        <div class="row">
+            <p class="text-center text-white mb-5">
+                Что делает “Барселли” особенным:
+
+
+            </p>>
+            <p class="text-center text-white mb-5">
+                Уютная атмосфера: Мы создали теплое и приятное пространство, где вы можете расслабиться и провести
+                приятный вечер с друзьями или близкими.
+
+            </p>
+            <p class="text-center text-white mb-5">
+                Изысканная кухня: Наши повара используют только свежие и качественные продукты для приготовления блюд,
+                которые порадуют вас своим вкусом и оригинальностью.
+
+            </p>>
+            <p class="text-center text-white mb-5">
+                Доброжелательный сервис: Мы гордимся нашим внимательным персоналом, который сделает все, чтобы ваш визит
+                в “Барселли” стал незабываемым.
+
+                Приглашаем вас посетить “Барселли” и убедиться в этом сами!
+            </p>>
+            <p class="text-center text-white mb-5">
+                Разнообразное меню: Мы предлагаем широкий выбор блюд русской и европейской кухни, чтобы удовлетворить
+                вкус каждого гостя.
+            </p>>
+            <p class="text-center text-white mb-5">
+                Доступные цены: Мы стремимся сделать наши услуги доступными для всех, предлагая привлекательные цены на
+                меню и дополнительные услуги.
+
+            </p>>
+
+        </div>
+
+    </footer>
+
+        {% endblock %}
+
+
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+
+</div>
 
 </body>
+
 </html>

@@ -1,10 +1,7 @@
-<nav class="navbar navbar-expand-md bg-dark sticky-top border-bottom" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md bg-dark sticky-top border-bottom" data-bs-theme="dark" style="background-image: url('/media/icon/img.png'); background-size: cover; background-repeat: no-repeat;">
     <a class="navbar-brand" href="/">
         <img src="/media/icon/icon_logo.png"/>
-        <a class="navbar-brand" href="/">Срачелли</a>
-        <div class="alert  alert-warning" role="alert">
-            A simple primary alert—check it out!
-        </div>
+        <a class="navbar-brand" href="/">Барселли</a>
     </a>
 
     <div class="container">
@@ -27,31 +24,32 @@
 
 
 
-                <ul class="navbar-nav flex-grow-1 justify-content-between">
+                <ul class="navbar-nav flex-grow-1 justify-content-between" >
                     {% if user.is_authenticated   %}
-                    <li class="nav-item"><a class="nav-link" href="/table/">Забронировать столик</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users:profile'  %}">Профиль</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-light ml-2" href="/table/">Забронировать столик</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-light ml-1" href="{% url 'users:profile'  %}">Профиль</a></li>
 
                     {% endif %}
 
-                    <li class="nav-item"><a class="nav-link" href="/contacts/">Контакты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'booking:team_list' %}">О ресторане</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-light ml-2" href="/contacts/">Контакты</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-light ml-2" href="{% url 'booking:team_list' %}">О ресторане</a></li>
 
                     {% if user.is_authenticated and user.is_superuser %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'booking:services_create' %}">Добавить новую
+                    <li class="nav-item"><a class="btn btn-outline-warning ml-2" href="{% url 'booking:services_create' %}">Добавить новую
                         услугу</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'booking:table_create' %}">Добавить новый
+                    <li class="nav-item"><a class="btn btn-outline-warning ml-2" href="{% url 'booking:table_create' %}">Добавить новый
                         стол</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ml-2" href="{% url 'booking:admin_messages' %}">Проверить сообщения</a></li>
 
-                    <li class="nav-item"><a class="nav-link" href="/admin/">Админка</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ml-2" href="/admin/">Админка</a></li>
 
                     {% endif %}
 
                     {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}">Выход</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-light ml-2" href="{% url 'users:logout' %}">Выход</a></li>
                     {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Вход</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'users:register' %}">Зарегистрироваться</a>
+                    <li class="nav-item"><a class="btn btn-outline-success ml-2" href="{% url 'users:login' %}">Вход</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ml-2" href="{% url 'users:register' %}">Зарегистрироваться</a>
                     </li>
 
 
@@ -59,7 +57,7 @@
 
 
                 </ul>
-            </div>
+            </div >
 
         </div>
     </div>

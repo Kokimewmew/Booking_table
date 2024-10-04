@@ -3,19 +3,46 @@
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-        <img class=" card-img-top "    src="{{ services.preview|media_filter  }}">
+        <img class=" card-img-top " src="{{ services.preview|media_filter  }}">
         <div class="row">
             <div class="col">
                 <div class="card shadow-sm">
 
                     <div class="card-body">
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <p class="card-text">{{object.name}}</p>
-                        <p class="card-text">{{object.description}}</p>
-                            </ul>
+                            <p class="card-text text-warning ">{{object.name}}</p>
+                            <p class="card-text">{{object.description}}</p>
+
+                            <p class="card-text text-primary h5 ">Что мы предлагаем:</p>
+                            <p class="card-text"><strong><em>1 Прекрасный банкетный зал:</em></strong> Уютный и красиво
+                                оформленный зал, который
+                                может вместить 50 гостей, создавая интимную атмосферу для вашего
+                                торжества.</p>
+                            <p class="card-text"><strong><em>2 Музыкальное сопровождение:</em></strong> Мы предлагаем
+                                возможность организовать
+                                живую музыку или ди-джея для вашего торжества.</p>
+                            <p class="card-text"><strong><em>3 Изысканное меню:</em></strong> Мы предлагаем широкий
+                                выбор блюд русской и
+                                европейской кухни, которые порадуют вас и ваших гостей своим вкусом и качеством. Мы
+                                готовы учесть все ваши желания и составить индивидуальное меню, включая вегетарианские и
+                                диетические варианты.</p>
+
+                            <p class="card-text"><strong><em>4 Украшение зала:</em></strong> Мы поможем вам создать
+                                атмосферу сказки с помощью
+                                красивой цветочной декорации, текстиля и других элементов декора.</p>
+
+                            <p class="card-text"><strong><em>5 Дополнительные услуги:</em></strong> Мы также предлагаем
+                                дополнительные услуги,
+                                такие как фотограф, видеограф, ведущий, трансфер и многое другое.</p>
+
+
+                            <p class="card-text text-primary">Позвоните нам или отправьте ваш телефон в форме обратной
+                                связи в <a href="/contacts/" class="">Контактах</a> </p>
+
+
+                        </ul>
 
                         <div class="d-flex justify-content-between align-items-center">
-
 
 
                             <div class="btn-group-5">
@@ -32,8 +59,10 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
 
 {% endblock  %}
