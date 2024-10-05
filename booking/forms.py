@@ -36,8 +36,12 @@ class ReservationForm(StyleFormMixin, ModelForm):
         start_time = datetime.strptime(cleaned_data.get('start_time'), '%H:%M').time()
 
         # Рассчитываем время начала и конца бронирования с учетом 4-х часов до и после
-
         before_time = (datetime.combine(datetime.min, start_time) - timedelta(hours=3, minutes=59)).time()
+
+        #if cleaned_data.get('start_time') == '21:00':
+        #    end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=2, minutes=59)).time()
+#
+        #else:
         end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
 
         # Проверка на конфликт с существующими бронированиями

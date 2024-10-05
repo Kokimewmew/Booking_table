@@ -156,7 +156,12 @@ class ReservationCreateView(CreateView, LoginRequiredMixin):
             start_date = form.cleaned_data.get('start_date')
             start_time_str = form.cleaned_data.get('start_time')
             start_time = datetime.strptime(start_time_str, '%H:%M').time()
-            end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
+            if form.cleaned_data.get('start_time') == '21:00':
+                end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=2, minutes=59)).time()
+            elif form.cleaned_data.get('start_time') == '22:00':
+                end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=1, minutes=59)).time()
+            else:
+                end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
             end_datetime = datetime.combine(start_date, end_time)
             form.instance.end_datetime = end_datetime
 
@@ -182,7 +187,12 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
             start_date = form.cleaned_data.get('start_date')
             start_time_str = form.cleaned_data.get('start_time')
             start_time = datetime.strptime(start_time_str, '%H:%M').time()
-            end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
+            if form.cleaned_data.get('start_time') == '21:00':
+                end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=2, minutes=59)).time()
+            elif form.cleaned_data.get('start_time') == '22:00':
+                end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=1, minutes=59)).time()
+            else:
+                end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
             end_datetime = datetime.combine(start_date, end_time)
             form.instance.end_datetime = end_datetime
             return super().form_valid(form)
