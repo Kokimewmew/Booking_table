@@ -40,3 +40,4 @@ urlpatterns = [
     path('messages/', AdminMessagesView.as_view(), name='admin_messages'),
 
 ]
+

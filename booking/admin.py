@@ -21,3 +21,4 @@ class ReservationAdmin(admin.ModelAdmin):
 @admin.register(RestaurantTeam)
 class RestaurantTeamAdmin(admin.ModelAdmin):
     list_display = ('employee_name', 'position', 'photo',)
+

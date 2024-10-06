@@ -1,7 +1,5 @@
 from datetime import datetime
 from django.db import models
-from django.utils import timezone
-
 from booking.validators import validate_start_date
 from users.models import User
 
@@ -74,7 +72,6 @@ class Reservation(models.Model):
     def __str__(self):
         return f'{self.user} забронировал  {self.table} на  {self.start_date}'
 
-
     class Meta:
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Бронирование'
@@ -106,3 +103,4 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+

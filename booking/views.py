@@ -20,7 +20,7 @@ class ServicesListView(ListView):
 
 
 class ContactsView(TemplateView):
-    template_name = 'contacts.html'
+    template_name = 'base.html'
 
     def post(self, request):
         if request.method == 'POST':
@@ -36,7 +36,7 @@ class ContactsView(TemplateView):
 
             print(f'You have new message from {new_message.name} {new_message.phone}  {new_message.message}  ')
 
-            return redirect('booking:contacts')
+            return redirect('booking:main')
 
 
 class AdminMessagesView(ListView):
@@ -246,3 +246,4 @@ class RestaurantTeamDeleteView(DeleteView):
     template_name = 'team_delete.html'
     model = RestaurantTeam
     success_url = reverse_lazy('booking:team_list')
+

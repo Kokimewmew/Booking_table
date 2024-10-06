@@ -1,4 +1,4 @@
-from datetime import timedelta, time, datetime
+from datetime import timedelta, datetime
 
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
@@ -37,11 +37,6 @@ class ReservationForm(StyleFormMixin, ModelForm):
 
         # Рассчитываем время начала и конца бронирования с учетом 4-х часов до и после
         before_time = (datetime.combine(datetime.min, start_time) - timedelta(hours=3, minutes=59)).time()
-
-        #if cleaned_data.get('start_time') == '21:00':
-        #    end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=2, minutes=59)).time()
-#
-        #else:
         end_time = (datetime.combine(datetime.min, start_time) + timedelta(hours=3, minutes=59)).time()
 
         # Проверка на конфликт с существующими бронированиями
@@ -56,7 +51,7 @@ class ReservationForm(StyleFormMixin, ModelForm):
             raise ValidationError("Стол занят в это время.")
 
         # Проверка на существование активного бронирования у пользователя
-        if self.user:  # Проверяем,  есть  ли  пользователь  в  контексте
+        if self.user:  # Проверяем, есть ли пользователь в контексте
 
             active_reservations = Reservation.objects.filter(
                 user=self.user,
